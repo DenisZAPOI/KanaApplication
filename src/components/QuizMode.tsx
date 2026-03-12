@@ -1,5 +1,5 @@
-import {useState} from "react";
 import type {Kana} from "../data/kana.ts";
+import {useState} from "react";
 
 interface QuizModeProps {
   script: 'hiragana' | 'katakana';
@@ -7,26 +7,21 @@ interface QuizModeProps {
 }
 
 function QuizMode({ script, kanaData }: QuizModeProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(()=>Math.floor(Math.random() * kanaData.length));
   const [userAnswer, setUserAnswer] = useState('');
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [feedback, setFeedback] = useState('');
-  const getRandomCharacter = () => {
-    const randomIndex = Math.floor(Math.random() * kanaData.length);
-    return kanaData[randomIndex];
-  };
-  const currentKana = getRandomCharacter();
+
+  const currentKana = kanaData[currentIndex];
   const displayChar = script === 'hiragana'
-    ? currentKana.hiragana
-    : currentKana.katakana;
-
-
+      ? currentKana.hiragana
+      : currentKana.katakana;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const isCorrect = userAnswer.toLowerCase().trim() ===
-                      currentKana.romanji.toLowerCase();
+        currentKana.romanji.toLowerCase();
 
     setScore({
       correct: score.correct + (isCorrect ? 1 : 0),
@@ -38,34 +33,34 @@ function QuizMode({ script, kanaData }: QuizModeProps) {
 
     // Passer au suivant après un délai
     setTimeout(() => {
-      setCurrentIndex((currentIndex + 1) % kanaData.length);
+      setCurrentIndex((Math.floor(Math.random() * kanaData.length)));
       setFeedback('');
     }, 1500);
   };
 
   return (
-    <div>
-      <div className="score">
-        Score : {score.correct} / {score.total}
+      <div>
+        <div className="score">
+          Score : {score.correct} / {score.total}
+        </div>
+
+        <div className="quiz-character">
+          <h2>{displayChar}</h2>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+              type="text"
+              value={userAnswer}
+              onChange={e => setUserAnswer(e.target.value)}
+              placeholder="Romanji..."
+              autoFocus
+          />
+          <button type="submit">Valider</button>
+        </form>
+
+        {feedback && <div className="feedback">{feedback}</div>}
       </div>
-
-      <div className="quiz-character">
-        <h2>{displayChar}</h2>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={userAnswer}
-          onChange={e => setUserAnswer(e.target.value)}
-          placeholder="Romanji..."
-          autoFocus
-        />
-        <button type="submit">Valider</button>
-      </form>
-
-      {feedback && <div className="feedback">{feedback}</div>}
-    </div>
   );
 }
 export default QuizMode;
