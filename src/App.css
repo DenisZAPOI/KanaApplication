@@ -1,0 +1,62 @@
+/* --- Mise en page globale --- */
+#root {
+  width: 90%;          /* Utilise plus de largeur d'écran */
+  max-width: 1200px;   /* Limite supérieure plus généreuse */
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* --- La Ligne (Grid) --- */
+.kana-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;           /* Plus d'espace entre les cartes */
+  max-width: 800px;    /* Largeur de la grille augmentée pour PC */
+  margin: 0 auto 20px auto;
+  justify-items: center;
+}
+.kana-section {
+
+}
+
+/* --- La Carte Sakura --- */
+.character-card {
+  width: 100%;         /* La carte occupe toute sa colonne */
+  max-width: 140px;    /* Elle peut monter jusqu'à 140px (au lieu de 100) */
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe4e8 100%);
+  border-radius: 16px; /* Bords un peu plus ronds pour les grandes cartes */
+  border: 2px solid #ffdae0;
+  box-shadow: 0 4px 15px rgba(255, 183, 197, 0.2);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.character-card h2 {
+  color: #d14d72;
+  font-size: 2.8rem;   /* Caractère plus gros pour PC */
+  margin: 0;
+  line-height: 1;
+}
+
+.character-card h3 {
+  color: #8a9a5b;
+  font-size: 1.1rem;   /* Romaji plus lisible */
+  margin-top: 8px;
+}
+
+/* --- Responsive (pour garder le mode tel quand même) --- */
+@media (max-width: 600px) {
+  .kana-row {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .character-card h2 {
+    font-size: 1.8rem;
+  }
+}
