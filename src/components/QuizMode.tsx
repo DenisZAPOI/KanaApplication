@@ -1,5 +1,5 @@
-import type {Kana} from "../data/kana.ts";
-import {useState} from "react";
+import type { Kana } from "../data/kana.ts";
+import useQuiz from "../hooks/useQuiz.ts";
 
 interface QuizModeProps {
   script: 'hiragana' | 'katakana';
@@ -7,54 +7,39 @@ interface QuizModeProps {
 }
 
 function QuizMode({ script, kanaData }: QuizModeProps) {
-  const [currentIndex, setCurrentIndex] = useState(()=>Math.floor(Math.random() * kanaData.length));
-  const [userAnswer, setUserAnswer] = useState('');
-  const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [feedback, setFeedback] = useState('');
+  const {
+    currentKana,
+    userAnswer,
+    setUserAnswer,
+    score,
+    bestScore,
+    feedback,
+    inputRef,
+    handleSubmit
+  } = useQuiz(kanaData);
 
-  const currentKana = kanaData[currentIndex];
   const displayChar = script === 'hiragana'
       ? currentKana.hiragana
       : currentKana.katakana;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const isCorrect = userAnswer.toLowerCase().trim() ===
-        currentKana.romanji.toLowerCase();
-
-    setScore({
-      correct: score.correct + (isCorrect ? 1 : 0),
-      total: score.total + 1
-    });
-
-    setFeedback(isCorrect ? 'Correct !' : `Incorrect. C'était ${currentKana.romanji}`);
-    setUserAnswer('');
-
-    // Passer au suivant après un délai
-    setTimeout(() => {
-      setCurrentIndex((Math.floor(Math.random() * kanaData.length)));
-      setFeedback('');
-    }, 1500);
-  };
-
   return (
       <div>
-        <div className="score">
-          Score : {score.correct} / {score.total}
-        </div>
+          <div className="score">
+              <div className="score">Score actuel : {score.correct} / {score.total}</div>
+              <div className="best-score">🏆 Record : {bestScore}</div>
+          </div>
 
-        <div className="quiz-character">
-          <h2>{displayChar}</h2>
-        </div>
+          <div className="quiz-character">
+              <h2>{displayChar}</h2>
+          </div>
 
-        <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
           <input
+              ref={inputRef}
               type="text"
               value={userAnswer}
               onChange={e => setUserAnswer(e.target.value)}
               placeholder="Romanji..."
-              autoFocus
           />
           <button type="submit">Valider</button>
         </form>
@@ -63,4 +48,5 @@ function QuizMode({ script, kanaData }: QuizModeProps) {
       </div>
   );
 }
+
 export default QuizMode;
