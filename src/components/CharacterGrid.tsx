@@ -8,12 +8,11 @@
 
     const CharacterGrid = ({ characters, title }: CharacterGridProps) => {
         const rowNames = ['a', 'ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ya', 'ra', 'wa', 'n'];
-
         const isHiragana = title === "Hiragana";
 
         return (
             <div className="kana-section">
-                <h1>{title}</h1>
+                <h1 className="text-3xl font-bold my-8">{title}</h1>
 
                 {rowNames.map(rowName => (
                     <div key={rowName} className="kana-row">
